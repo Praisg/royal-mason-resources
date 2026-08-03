@@ -1,0 +1,30 @@
+{
+  "name": "royal-mason-resources",
+  "description": "Royal Mason Resources marketing site",
+  "repository": "https://github.com/Praisg/royal-mason-resources",
+  "keywords": ["vite", "react", "rmr"],
+  "success_url": "/",
+  "env": {
+    "NODE_ENV": {
+      "description": "Node environment",
+      "value": "production"
+    },
+    "VITE_WHATSAPP_NUMBER": {
+      "description": "WhatsApp number digits only (e.g. 263789569999). Optional — falls back to site default.",
+      "required": false
+    },
+    "VITE_CONTACT_EMAIL": {
+      "description": "Public contact email. Optional.",
+      "required": false
+    },
+    "VITE_FORMSPREE_ID": {
+      "description": "Formspree form ID for contact/quote submissions (optional).",
+      "required": false
+    }
+  },
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ]
+}

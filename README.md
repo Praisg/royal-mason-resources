@@ -48,3 +48,17 @@ Native dialog supports Escape and focus containment. Semantic labels, error desc
 - The separately loaded 3D bundle is approximately 245 KB gzipped; Vite reports a size advisory for its uncompressed chunk.
 
 Use Node.js 22.12 or newer for installation, matching the lint tool's supported runtime. Local verification on the provided Node 20 environment required installing its missing platform-specific lint binding.
+
+## Heroku deployment
+
+The app includes a production Node server; do not use the Vite development server on Heroku.
+
+- `heroku-postbuild` runs the production build during deployment.
+- `Procfile` starts `npm start`, which runs `server.js` without development dependencies.
+- The server binds to `0.0.0.0` and Heroku's assigned `PORT` and serves `dist/` with fallback for the five application routes.
+- Node is pinned to the supported 22.x major version.
+- For a local production check, run `npm run build`, `npm test`, then `npm start` (port 3000 by default).
+- Deploy the latest `main` from the Heroku dashboard's connected GitHub repository. If automatic deployment is enabled, the push can trigger deployment.
+- Ensure the Node buildpack is used and at least one web dyno is running. Keep development dependencies available during the build; Heroku can prune them afterward.
+
+The prior H10 crash followed a repository replacement that omitted the production start command. The production server and Procfile restore the startup contract.

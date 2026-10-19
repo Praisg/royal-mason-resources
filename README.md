@@ -1,8 +1,10 @@
-# HookedUp public website
+# HookedUp — All Channels Tour Bus
 
-First-phase public business website for HookedUp. React, TypeScript and Vite; a lazy-loaded React Three Fiber / Drei scene with original geometry and a CSS fallback. No database, accounts, payment or tracking simulation.
+Public business website for vehicle hire, shuttles, city tours and courier enquiries. Built with React, TypeScript and Vite, with a small amount of Framer Motion for section reveals. Heroku production startup is included.
 
-## Run
+## Local setup
+
+Use Node.js 22.x.
 
 ```sh
 git clone https://github.com/Praisg/royal-mason-resources.git
@@ -11,54 +13,62 @@ npm install
 npm run dev
 ```
 
-Open http://127.0.0.1:5174. Validate with `npm run build` and `npm run lint`.
+Open http://127.0.0.1:5174. For production checks:
 
-## Content and WhatsApp
+```sh
+npm run build
+npm run lint
+npm test
+npm start
+```
 
-Edit `src/config.ts` for contacts, service descriptions and verified future fleet entries. Set `business.whatsappNumber` to the confirmed international number (digits only, no `+`, spaces or leading domestic zero). Until configured, enquiries offer a copy action and the supplied domestic contact numbers. The site never claims a message was sent or a booking was confirmed.
+The production server defaults to http://localhost:3000 and honours the `PORT` environment variable.
 
-Forms keep details only in React memory. Required fields, passenger counts, dates and pickup times are validated. Customers review their enquiry before copying or opening WhatsApp. Closing the form clears its state. The site does not send enquiries to a backend or analytics.
+## Photos and branding
 
-Routes: `/`, `/car-hire`, `/shuttles-tours`, `/courier`, `/about`. A future static host must rewrite page requests to `index.html`. Each route updates the title and description; server-rendered SEO and social previews are future deployment considerations.
+The design uses the business assets supplied on 18 October 2026:
 
-## Before public launch
+- `public/brand/hookedup-logo.png`: the coloured logo rendered directly from page 3 of `Hooked up car branding.pdf`.
+- `public/brand/hookedup-brand.jpg`: the supplied square branding artwork, used on the contact page.
+- `public/images/quantum-exterior.jpg`: the clearest three-quarter exterior photograph, used in the hero and gallery.
+- `public/images/quantum-interior.jpg` and `quantum-open-door.jpg`: the two open-door photographs, used in the hero inset and selectable gallery.
+
+The original photographs are preserved. Display crops use CSS `object-fit` and the positions in `src/config.ts`. The gallery opens the full photograph in an accessible dialog with previous/next controls. The front-only photo and social advertising layouts were not selected: the exterior and seating photographs show the vehicle more clearly and allow the website’s text to remain accessible HTML.
+
+Cyan, orange, red and purple accents come from the supplied artwork. Navy and white provide readable backgrounds. Vehicle-wrap drawings in the PDF are branding concepts and are not presented as photographs of the vehicle’s current livery. No additional vehicle capacity or inventory is invented.
+
+The earlier abstract WebGL scene has been removed. Depth now comes from layered photographs, restrained hover movement and section reveals. Reduced-motion preferences are respected. Google Fonts has system font fallbacks.
+
+## Updating content and WhatsApp
+
+Edit `src/config.ts` for contacts, service descriptions, photo captions and logo paths. Set `business.whatsappNumber` only after confirming the country code and destination: international digits, with no `+`, spaces or domestic leading zero.
+
+Until configured, the enquiry form offers a copy action and displays the supplied domestic numbers. It never claims a message was sent or a booking was confirmed. Required fields, dates, times and passenger counts are validated. Customers review their details before sharing. Enquiries stay in React memory and are cleared when the dialog closes; there is no storage, analytics, authentication or payment collection.
+
+Routes: `/`, `/car-hire`, `/shuttles-tours`, `/courier`, `/about`. Page titles and descriptions update on navigation. The production server supports direct loading of each route; an alternative static host needs equivalent routing rules. Server-rendered metadata and social previews remain future improvements.
+
+## Remaining business details
 
 - Confirm the country code and designated WhatsApp number for 0780332387 / 0713968275.
-- Confirm operating country, service areas and availability of each service.
-- Supply the referenced branding PDF and approved logo. Current colours are provisional; the site uses a text wordmark.
-- Supply approved vehicle photos, verified fleet inventory, passenger capacities and features. No fleet is claimed in this version.
-- Confirm company information, any registered name and customer-facing terms/privacy requirements.
-- Approve public copy and any delivery preferences. No prices, ETAs or guaranteed coverage are promised.
-- Provide licensed photography if desired. All current route and parcel visuals are original illustrative geometry/CSS, not actual fleet or tracking.
-- Google Fonts is the only remote visual dependency; system sans-serif fonts are the fallback. Self-host approved fonts for launch if preferred.
-- Test the confirmed WhatsApp destination on desktop and mobile, and complete visual browser/device QA.
-- Decide hosting/domain and public deployment separately. Pushing source to GitHub does not by itself configure website hosting.
-
-## Accessibility and rendering
-
-Native dialog supports Escape and focus containment. Semantic labels, error descriptions, keyboard focus styles and a skip link are included. Reduced-motion users see the static route; unsupported WebGL and lazy-load failure retain the static fallback. Rendering stops offscreen and in hidden tabs; pixel ratio is capped. The city scene is illustrative, with no tracking or location data. All actions are usable independently of 3D loading.
-
-## Verification completed
-
-- TypeScript and production build passed; lint passed.
-- Chrome desktop (1440 px) and mobile (390 px) layouts inspected.
-- All five routes, mobile menu, required fields, past dates, passenger counts, review/edit, copy action, Escape dismissal and general enquiries passed browser checks with no page errors.
-- Reduced-motion static fallback and mobile overflow checks passed.
-- WhatsApp message encoding round-tripped special characters correctly using a test-only destination. No message was sent.
-- The separately loaded 3D bundle is approximately 245 KB gzipped; Vite reports a size advisory for its uncompressed chunk.
-
-Use Node.js 22.12 or newer for installation, matching the lint tool's supported runtime. Local verification on the provided Node 20 environment required installing its missing platform-specific lint binding.
+- Confirm operating country, service areas and service availability.
+- Confirm vehicle passenger capacity, any additional fleet and hire arrangements.
+- Confirm any registered company details and customer terms/privacy wording.
+- Supply actual social profile URLs if those links should be included.
+- Confirm quote, collection and booking arrangements. The site does not promise prices, ETAs or coverage.
 
 ## Heroku deployment
 
-The app includes a production Node server; do not use the Vite development server on Heroku.
+- `heroku-postbuild` runs `npm run build` during deployment.
+- `Procfile` starts `npm start`, which runs the production `server.js` without development dependencies.
+- The server listens on `0.0.0.0` and Heroku’s assigned `PORT`, serving `dist/` and the five application routes.
+- Node is pinned to 22.x. Development dependencies must be available during the build; Heroku can prune them afterward.
+- The GitHub repository is https://github.com/Praisg/royal-mason-resources, branch `main`. Deploy the latest branch in Heroku if automatic deployments are disabled.
 
-- `heroku-postbuild` runs the production build during deployment.
-- `Procfile` starts `npm start`, which runs `server.js` without development dependencies.
-- The server binds to `0.0.0.0` and Heroku's assigned `PORT` and serves `dist/` with fallback for the five application routes.
-- Node is pinned to the supported 22.x major version.
-- For a local production check, run `npm run build`, `npm test`, then `npm start` (port 3000 by default).
-- Deploy the latest `main` from the Heroku dashboard's connected GitHub repository. If automatic deployment is enabled, the push can trigger deployment.
-- Ensure the Node buildpack is used and at least one web dyno is running. Keep development dependencies available during the build; Heroku can prune them afterward.
+## Verification
 
-The prior H10 crash followed a repository replacement that omitted the production start command. The production server and Procfile restore the startup contract.
+- TypeScript, production build, lint and production-server tests.
+- Desktop at 1440 px and mobile at 390 px visually inspected; overflow and mobile navigation checked at 320, 390 and 768 px.
+- All five pages, gallery thumbnails, full-photo viewer, previous/next buttons and Escape dismissal.
+- Courier/transport validation, past dates, passenger counts, review/edit and copy action.
+- Reduced-motion behaviour and no browser page errors.
+- Production tests cover direct routes, assets, MIME types, caching, HEAD, unsupported methods and private paths.
